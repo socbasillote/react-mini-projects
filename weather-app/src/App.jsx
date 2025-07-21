@@ -2,6 +2,10 @@ import { useState } from 'react'
 import WeatherCard from './WeatherCard';
 import Spinner from './Spinner';
 import { API_KEY } from './keys';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1d8c07674820c9814518e2ab64a071789d7f729c
 import './App.css'
 
 
