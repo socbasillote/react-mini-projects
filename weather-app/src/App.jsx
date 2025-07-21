@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import WeatherCard from './WeatherCard';
 import Spinner from './Spinner';
-
+import { API_KEY } from './keys';
 import './App.css'
 
-const API_KEY = '7c91895d48076eec9e97d1c39b10f3d7'
+
 
 function App() {
   const [city, setCity] = useState('');
