@@ -21,6 +21,30 @@ function App() {
 
   const [activeMode, setActiveMode] = useState('pomodoro');
 
+  const [username, setUsername] = useState(localStorage.getItem('pomodoroUser') || '');
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem('pomodoroHistory');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  useEffect(() => {
+    if (username) {
+      localStorage.setItem('pomodoroUser', username);
+    }
+  }, [username]);
+
+  useEffect(() => {
+    localStorage.setItem('pomodoroHistory', JSON.stringify(history));
+  }, [history])
+
+  const completeFocusSession = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    setHistory(prev => ({
+      ...prev,
+      [today]: (prev[today] || 0) + 1
+    }));
+  };
+
 /*   useEffect(() => {
     let timer 
 
@@ -76,12 +100,14 @@ function App() {
               setTimeLeft(longBreak)
               setCountInterval(0)
               setIsFocus(false);
+              completeFocusSession();
               setActiveMode('longbreak')
             } else {
               setTimeLeft(shortBreak)
               setActiveMode('shortbreak')
               setIsFocus(false);
               setCountInterval(count => count + 1)
+              completeFocusSession();
               console.log('short break')
             }
             
@@ -96,6 +122,7 @@ function App() {
 
   const handleStart = () => {
     setIsRunning(prev => !prev)
+
   }
   const handleNext = () => {
     setIsRunning(false)
@@ -133,6 +160,19 @@ function App() {
         <button onClick={handleNext}>Next</button>
         : ''
     }
+
+    {username ? (
+  <>
+    <h3>Hello, {username}!</h3>
+    <p>You completed <strong>{history[new Date().toISOString().slice(0, 10)] || 0}</strong> Pomodoro(s) today</p>
+  </>
+) : (
+  <input
+    placeholder="Enter your name"
+    onBlur={(e) => setUsername(e.target.value)}
+  />
+)}
+
 
     </div>
   )
