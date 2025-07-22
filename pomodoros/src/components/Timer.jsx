@@ -10,7 +10,7 @@ function Timer({time}) {
 
   return (
     <div>
-       <h1>{formatTime(time)}</h1>
+       <h1 className='text-9xl'>{formatTime(time)}</h1>
     </div>
   )
 }

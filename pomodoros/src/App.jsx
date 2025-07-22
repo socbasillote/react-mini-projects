@@ -1,180 +1,42 @@
-import { useState, useEffect } from 'react'
-
-import Timer from './components/Timer';
-import Controller from './components/Controller';
-
-
+import React, {useState, useEffect} from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Login from './pages/Login'
+import Pomodoro from './pages/Pomodoro'
+import Navbar from './components/Navbar'
 
 import './App.css';
 
 function App() {
-  const focusTime = 3; //25 * 60; //25 mins
-  const shortBreak = 2; //5 * 60;
-  const longBreak = 4;//15 * 60
-
-  const [timeLeft, setTimeLeft] = useState(focusTime);
-  const [isRunning, setIsRunning] = useState(false);
-
-
-  const [countInterval, setCountInterval] = useState(1);
-  const [isFocus, setIsFocus] = useState(true); // true = focus, false = break
-
-  const [activeMode, setActiveMode] = useState('pomodoro');
-
-  const [username, setUsername] = useState(localStorage.getItem('pomodoroUser') || '');
-  const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('pomodoroHistory');
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [username, setUsername] = useState();
 
   useEffect(() => {
-    if (username) {
-      localStorage.setItem('pomodoroUser', username);
-    }
-  }, [username]);
+    const storedUser = localStorage.getItem('PomodoroUser');
+    if (storedUser) setUsername(storedUser);
+  })
 
-  useEffect(() => {
-    localStorage.setItem('pomodoroHistory', JSON.stringify(history));
-  }, [history])
-
-  const completeFocusSession = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    setHistory(prev => ({
-      ...prev,
-      [today]: (prev[today] || 0) + 1
-    }));
-  };
-
-/*   useEffect(() => {
-    let timer 
-
-   if (isRunning) {
-      timer = setInterval(() => {
-
-        setTimeLeft(prev => prev - 1);
-        handlePhase()
-      }, 1000)
-    } 
-
-    
-    return () => clearInterval(timer);
-  }, [timeLeft, isRunning, isFocus])
- */
-
-
-  useEffect(() => {
-    let timer;
-    if (isRunning && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft(prev =>  prev - 1);
-      }, 1000);
-    } 
-
-    return () => clearInterval(timer);
-  }, [isRunning, timeLeft])
-
-  useEffect(() => {
-    if (timeLeft === 0 && isRunning) {
-      setIsRunning(false);
-      setTimeout(() => {
-        handlePhase();
-        setIsRunning(true);
-      }, 1000);
-    }
-  }, [timeLeft, isRunning])
-
-
-  useEffect(() => {
-    if (activeMode === 'pomodoro') {
-      document.body.style.backgroundColor = '#ff6b6b';
-    } else if (activeMode === 'shortbreak') {
-      document.body.style.backgroundColor = '#4ecdc4';
-    } else if (activeMode === 'longbreak') {
-      document.body.style.backgroundColor = '#1a535c';
-    }
-  }, [activeMode])
-  
-  const handlePhase = () => {
-        if (isFocus) {
-            if (countInterval === 4) {
-              setTimeLeft(longBreak)
-              setCountInterval(0)
-              setIsFocus(false);
-              completeFocusSession();
-              setActiveMode('longbreak')
-            } else {
-              setTimeLeft(shortBreak)
-              setActiveMode('shortbreak')
-              setIsFocus(false);
-              setCountInterval(count => count + 1)
-              completeFocusSession();
-              console.log('short break')
-            }
-            
-        } else {
-          setTimeLeft(focusTime)
-          setIsFocus(true);
-          setActiveMode('pomodoro')
-          console.log('focus time')
-        }
-
-  }
-
-  const handleStart = () => {
-    setIsRunning(prev => !prev)
-
-  }
-  const handleNext = () => {
-    setIsRunning(false)
-    handlePhase();
-  }
-  const handleShortbreak = () => {
-    setTimeLeft(shortBreak)
-    setActiveMode('shortbreak')
-  }
-  const handleLongBreak = () => {
-    setTimeLeft(longBreak)
-    setActiveMode('longbreak')
-  }
-  const handlePomodoro = () => {
-    if (isRunning) return
-    setTimeLeft(focusTime)
-    setActiveMode('pomodoro')
-    setIsFocus(true)
-  }
-  
   return (
-    <div>
-      <h1>Pomodoro</h1>
-      <Controller 
-        pomodoro={handlePomodoro}
-        shortbreak={handleShortbreak}
-        longbreak={handleLongBreak}
-        activeMode={activeMode}
-      />
-        <Timer time={timeLeft}/>
-        <p>{countInterval} / 4</p>
+    <Router>
+      {username && <Navbar username={username} setUsername={setUsername} />}
 
-      <button onClick={handleStart}>{isRunning ? 'Pause' : 'Start'}</button>
-      {isRunning ?
-        <button onClick={handleNext}>Next</button>
-        : ''
-    }
-
-    {username ? (
-  <>
-    <h3>Hello, {username}!</h3>
-    <p>You completed <strong>{history[new Date().toISOString().slice(0, 10)] || 0}</strong> Pomodoro(s) today</p>
-  </>
-) : (
-  <input
-    placeholder="Enter your name"
-    onBlur={(e) => setUsername(e.target.value)}
-  />
-)}
-
-
-    </div>
+      <Routes>
+        <Route 
+          path='/'
+          element={
+            username ? <Navigate to='/pomodoro' /> : <Navigate to='/login' />
+          }
+        />
+        <Route 
+          path='/login'
+          element={<Login setUsername={setUsername}/>} 
+        />
+        <Route 
+          path='/pomodoro'
+          element={
+            username ? <Pomodoro username={username} /> : <Navigate to="/login" />
+          }
+        />
+      </Routes>
+    </Router>
   )
 }
 
