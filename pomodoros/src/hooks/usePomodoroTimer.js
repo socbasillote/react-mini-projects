@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export default function usePomodoroTimer({ focusTime, shortBreak, longBreak, longBreakInterval, onSessionComplete }) {
-  const [timeLeft, setTimeLeft] = useState(focusTime);
+export default function usePomodoroTimer({focusDuration, shortBreakDuration, longBreakDuration, longBreakInterval, onSessionComplete }) {
+  const [timeLeft, setTimeLeft] = useState(focusDuration);
   const [isRunning, setIsRunning] = useState(false);
   const [isFocus, setIsFocus] = useState(true);
   const [countInterval, setCountInterval] = useState(1);
@@ -29,23 +29,31 @@ export default function usePomodoroTimer({ focusTime, shortBreak, longBreak, lon
     }
   }, [timeLeft, isRunning]);
 
+  useEffect(() => {
+    if (!isRunning) {
+        if (activeMode === 'pomodoro') setTimeLeft(focusDuration);
+        else if (activeMode === 'shortbreak') setTimeLeft(shortBreakDuration);
+        else if (activeMode === 'longbreak') setTimeLeft(longBreakDuration);
+    }
+  }, [focusDuration, shortBreakDuration, longBreakDuration, activeMode, isRunning])
+
   // Mode logic
   const handlePhaseSwitch = () => {
     if (isFocus) {
       if (countInterval === longBreakInterval) {
-        setTimeLeft(longBreak);
+        setTimeLeft(longBreakDuration);
         setCountInterval(0);
         setIsFocus(false);
         setActiveMode('longbreak');
       } else {
-        setTimeLeft(shortBreak);
+        setTimeLeft(shortBreakDuration);
         setCountInterval(count => count + 1);
         setIsFocus(false);
         setActiveMode('shortbreak');
       }
       onSessionComplete?.();
     } else {
-      setTimeLeft(focusTime);
+      setTimeLeft(focusDuration);
       setIsFocus(true);
       setActiveMode('pomodoro');
     }
@@ -60,17 +68,17 @@ export default function usePomodoroTimer({ focusTime, shortBreak, longBreak, lon
 
   const switchToPomodoro = () => {
     if (!isRunning) {
-      setTimeLeft(focusTime);
+      setTimeLeft(focusDuration);
       setIsFocus(true);
       setActiveMode('pomodoro');
     }
   };
   const switchToShortBreak = () => {
-    setTimeLeft(shortBreak);
+    setTimeLeft(shortBreakDuration);
     setActiveMode('shortbreak');
   };
   const switchToLongBreak = () => {
-    setTimeLeft(longBreak);
+    setTimeLeft(longBreakDuration);
     setActiveMode('longbreak');
   };
 

@@ -8,16 +8,12 @@ import useUser from '../hooks/useUser';
 import useHistory from '../hooks/useHistory';
 import usePomodoroTimer from '../hooks/usePomodoroTimer';
 
-function Pomodoro() {
-  const { username } = useUser();
+function Pomodoro({username, focusDuration, shortBreakDuration, longBreakDuration, longBreakInterval}) {
+  //const { username } = useUser();
   const { completeFocusSession } = useHistory(username);
 
   // settings
 
-  const [focusDuration, setFocusDuration] = useState(3);
-  const [shortBreakDuration, setShortBreakDuration] = useState(2);
-  const [longBreakDuration, setLongBreakDuration] = useState(4);
-  const [longBreakInterval, setLongBreakInterval] = useState(4);
 
   const {
     timeLeft,
@@ -30,10 +26,10 @@ function Pomodoro() {
     switchToShortBreak,
     switchToLongBreak,
   } = usePomodoroTimer({
-    focusTime: focusDuration,
-    shortBreak: shortBreakDuration,
-    longBreak: longBreakDuration,
-    longBreakInterval: longBreakInterval,
+    focusDuration,
+    shortBreakDuration,
+    longBreakDuration,
+    longBreakInterval,
     onSessionComplete: completeFocusSession
   });
 

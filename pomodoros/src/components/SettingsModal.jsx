@@ -1,16 +1,20 @@
 import React from 'react'
 
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+
 import '../styles/SettingsModal.css'
+
 
 function SettingsModal({
     onClose,
     focusDuration,
-    shortBreakDuration,
-    longBreakDuration,
-    longBreakInterval,
     setFocusDuration,
+    shortBreakDuration,
     setShortBreakDuration,
+    longBreakDuration,
     setLongBreakDuration,
+    longBreakInterval,
     setLongBreakInterval
 }) {
     const handleBackdropClick = (e) => {
