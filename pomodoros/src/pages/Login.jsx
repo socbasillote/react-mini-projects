@@ -7,10 +7,13 @@ function Login({ setUsername }) {
 
     const handleLogin = (e) => {
         e.preventDefault();
+
+
         if (!name.trim()) return;
-        setUsername(name);
+
         localStorage.setItem("pomodoroUser", name);
-        navigate("/pomodoro");
+        setUsername(name);
+        navigate("/");
     }
 
     
@@ -30,7 +33,7 @@ function Login({ setUsername }) {
                         type="submit"
                         className="bg-red-600 hover:bg-red-500 py-2 rounded text-sm font-medium"
                     >
-                        Start Pomodoro
+                        Log In
                     </button>
                 </form>
             </div>

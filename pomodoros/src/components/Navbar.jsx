@@ -1,11 +1,11 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function Navbar({ username, setUsername }) {
+    const navigate = useNavigate();
+
     const handleLogin = () => {
-        if (name) {
-            setUsername(name);
-            localStorage.setItem('pomodoroUser', name);
-        }
+        navigate("/login");
     };
 
     const handleLogout = () => {
@@ -33,6 +33,7 @@ function Navbar({ username, setUsername }) {
                     <button
                         onClick={handleLogin}
                         className='bg-green-600 hover:bg-green-500 px-4 py-1.5 rounded text-sm'
+                        
                     >
                         Login
                     </button>

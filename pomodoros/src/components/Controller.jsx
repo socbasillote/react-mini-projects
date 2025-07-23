@@ -10,7 +10,7 @@ function Controller({ pomodoro, shortbreak, longbreak, activeMode }) {
 
 
   return (
-    <div className='controller-buttons'>
+    <div className='controller-buttons mt-5'>
         <button onClick={pomodoro} className={activeMode === 'pomodoro' ? 'active' : ''}>Pomodoro</button>
         <button onClick={shortbreak} className={activeMode === 'shortbreak' ? 'active' : ''}>Short Break</button>
         <button onClick={longbreak} className={activeMode === 'longbreak' ? 'active' : ''}>Long Break</button>
