@@ -29,13 +29,24 @@ export default function usePomodoroTimer({focusDuration, shortBreakDuration, lon
     }
   }, [timeLeft, isRunning]);
 
+
   useEffect(() => {
     if (!isRunning) {
-        if (activeMode === 'pomodoro') setTimeLeft(focusDuration);
-        else if (activeMode === 'shortbreak') setTimeLeft(shortBreakDuration);
-        else if (activeMode === 'longbreak') setTimeLeft(longBreakDuration);
+      switch (activeMode) {
+        case 'pomodoro':
+          setTimeLeft(focusDuration);
+          break;
+        case 'shortbreak':
+          setTimeLeft(shortBreakDuration);
+          break;
+        case 'longbreak':
+          setTimeLeft(longBreakDuration);
+          break;
+        default:
+          break;
+      }
     }
-  }, [focusDuration, shortBreakDuration, longBreakDuration, activeMode, isRunning])
+  }, [activeMode, focusDuration, shortBreakDuration, longBreakDuration])
 
   // Mode logic
   const handlePhaseSwitch = () => {

@@ -16,6 +16,7 @@ function Navbar({
     setLongBreakDuration,
     longBreakInterval,
     setLongBreakInterval,
+    firebaseUser
 }) {
     
     const navigate = useNavigate();
@@ -87,6 +88,7 @@ function Navbar({
                 setLongBreakDuration={setLongBreakDuration}
                 longBreakInterval={longBreakInterval}
                 setLongBreakInterval={setLongBreakInterval}
+                firebaseUser={firebaseUser}
                 />
             )}
         </div>
